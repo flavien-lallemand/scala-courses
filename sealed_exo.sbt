@@ -1,9 +1,9 @@
 //Exercice instruction : Define a sealed class instructions that contains Car, Boat and Motorbike
 
 sealed abstract class Vehicule[A]{}
-case class Car[T] extends Vehicule[T]{}
-case class Motorbike[T] extends Vehicule[T]{}
-case class Boat[T] extends Vehicule[T]{}
+case class Car(brand: String, fiscalPower: Int, doorsNum: Int, firstYear: Int, fuel: String) extends Vehicule[T]{}
+case class Motorbike(brand: String, fiscalPower: Int, firstYear: Int, fuel: String) extends Vehicule[T]{}
+case class Boat(brand: String, fiscalPower: Int, firstYear: Int, fuel: String, length: Int) extends Vehicule[T]{}
 
 //For Car, Motorbike and Boat, we don't use object because an object is a singleton and
 //aimed to only exists once.
