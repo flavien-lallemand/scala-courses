@@ -14,7 +14,7 @@ case class Boat(brand: String, fiscalPower: Int, firstYear: Int, fuel: String, l
 //fuel type, first year of circulation...
 
 
-//Correction : Validé par le prof 
+////------------------------------- Correction : Validé par le prof ------------------------------------------------
 
 //Mettre val model dans sealed permet de forcer le fait que chaque objet qui étendra la sealed class devra forcément avoir un modèle
 sealed abstract class Vehicule{
@@ -26,6 +26,7 @@ case class Boat(registration: String, model: String) extends Vehicule{}
 
 
 
+//-------------------------------------------------------------------------------
 //Nouvel exercice : Créer sealed de la marque peugeot avec les produits qu'ils commercialisent (Voiture, scooter, salière, valise...)
 
 sealed abstract class Peugeot{
@@ -38,3 +39,45 @@ case class Truck(model: String, registration: String, price: Float, releaseYear:
 case class SaltShaker(material: String, dimensions: (Int, Int), price: Float, releaseYear: Int) extends Peugeot{}
 case class Suitcase(material: String,capacity: Int, price: Float, releaseYear: Int) extends Peugeot{}
 
+//-------------------------------------------------------------------------------
+//Nouvel exercice : Créer sealed class de moyen de paiement (Carte bleu uniquement)
+
+sealed abstract class BrandingName{}
+case object Amex extends brandingName{}
+case object Visa extends brandingName{}
+case object Mastercard extends brandingName{}
+
+//Custom extractor string, check length and all int at the same time
+object DigitsLength { 
+  def unapply(s: String, l: Int): Option[Int] = {
+      if(s.length() == l){
+          util.Try(s.toInt).toOption 
+      }else{
+          None
+      }
+  } 
+}
+
+
+class CVC( numbers : String, branding: brandingName){
+}
+object CVC{
+	def apply(numbers: String): Option[CVC] = (numbers, branding) match {
+        case (DigitsLength(i, 4), branding: Amex)   => Some(i)
+        case (DigitsLength(i, 3),branding: Mastercar ) =>  Some(i)
+        case (DigitsLength(i, 3), branding: Visa) =>  Some(i)
+        case _ => None
+    }
+}
+
+//EN mettant private, on empêche d'utiliser le constructeur par défaut et on peut ainsi seulement instancier via le companion object 
+class CardNumber private( numbers : String){
+}
+object CardNumber{
+	def apply(numbers: String): Option[CardNumber] = numbers match {
+        case DigitsLength(i, 16) => Some(new CardNumber(numbers))
+        case _ => None
+    }
+}
+
+case class CreditCard(brand: BrandingName, numbers: CardNumber, expirationMonth: Month, expirationYear: Year, cvc: CVC){}
